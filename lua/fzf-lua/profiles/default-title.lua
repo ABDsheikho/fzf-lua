@@ -61,6 +61,7 @@ return {
   command_history      = title("Command history"),
   search_history       = title("Search history"),
   registers            = title("Registers"),
+  clipboard            = title("Clipboard"),
   keymaps              = title("Keymaps"),
   nvim_options         = title("Nvim Options"),
   spell_suggest        = title("Spell Suggestions"),

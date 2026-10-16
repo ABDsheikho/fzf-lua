@@ -56,6 +56,7 @@ return {
   command_history      = prompt("Command history"),
   search_history       = prompt("Search history"),
   registers            = prompt("Registers"),
+  clipboard            = prompt("Clipboard"),
   keymaps              = prompt("Keymaps"),
   nvim_options         = prompt("Nvim Options"),
   spell_suggest        = prompt("Spell Suggestions"),

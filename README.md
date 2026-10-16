@@ -346,6 +346,7 @@ Fzf-Lua conveniently comes with a VS-Code like picker by default
 | `jumps`                | :jumps                                        |
 | `changes`              | :changes                                      |
 | `registers`            | :registers                                    |
+| `clipboard`            | clipboard history                             |
 | `tagstack`             | :tags                                         |
 | `autocmds`             | :autocmd                                      |
 | `nvim_options`         | neovim options                                |

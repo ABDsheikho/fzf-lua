@@ -1573,6 +1573,47 @@ function Previewer.jumps:parse_entry(entry_str)
   }
 end
 
+---@class fzf-lua.previewer.Clipboard : fzf-lua.previewer.BufferOrFile,{}
+---@field super fzf-lua.previewer.BufferOrFile,{}
+---@field _clipboard_tmp table<string, boolean>?
+Previewer.clipboard = Previewer.buffer_or_file:extend()
+
+function Previewer.clipboard:parse_entry(entry_str)
+  local provider = self.opts and self.opts.provider
+  -- image first: materialize the entry to a temp file so the inherited
+  -- image renderers (chafa/viu/ueberzug via `self.extensions`, snacks.image)
+  -- can pick it up, fall back to `[[ binary data ... ]]` text below
+  if provider and type(provider.file) == "function" then
+    local id = entry_str:match("^(%d+)")
+    local base = id and ("/tmp/fzf-lua-clipboard-" .. id)
+        or ("/tmp/fzf-lua-clipboard-" .. fn.sha256(entry_str):sub(1, 16))
+    local ok, fpath = pcall(provider.file, entry_str, base)
+    if ok and type(fpath) == "string" and uv.fs_stat(fpath) then
+      self._clipboard_tmp = self._clipboard_tmp or {}
+      self._clipboard_tmp[fpath] = true
+      local entry = Previewer.clipboard.super.parse_entry(self, fpath)
+      -- fallback text is the preview column only, not the searchable tail
+      local preview = entry_str:match("^[^\t]*\t([^\t]*)") or entry_str
+      entry.content = { { { preview, "Comment" } } }
+      return entry
+    end
+  end
+  local content = entry_str
+  if provider and type(provider.decode) == "function" then
+    local ok, res = pcall(provider.decode, entry_str)
+    if ok and type(res) == "string" then content = res end
+  end
+  return { content = vim.split(content, "\n", { plain = true }) }
+end
+
+function Previewer.clipboard:close(do_not_clear_cache)
+  for fpath in pairs(self._clipboard_tmp or {}) do
+    pcall(fn.delete, fpath)
+  end
+  self._clipboard_tmp = {}
+  Previewer.buffer_or_file.close(self, do_not_clear_cache)
+end
+
 ---@class fzf-lua.previewer.Hightlights : fzf-lua.previewer.BufferOrFile,{}
 ---@field super fzf-lua.previewer.Builtin,{}
 Previewer.highlights = Previewer.buffer_or_file:extend()

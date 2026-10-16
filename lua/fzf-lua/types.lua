@@ -290,6 +290,7 @@ FzfLua.blines = require("fzf-lua.providers.buffers").blines
 FzfLua.btags = require("fzf-lua.providers.tags").btags
 FzfLua.buffers = require("fzf-lua.providers.buffers").buffers
 FzfLua.changes = require("fzf-lua.providers.nvim").changes
+FzfLua.clipboard = require("fzf-lua.providers.clipboard").clipboard
 FzfLua.colorschemes = require("fzf-lua.providers.colorschemes").colorschemes
 FzfLua.combine = require("fzf-lua.providers.meta").combine
 FzfLua.command_history = require("fzf-lua.providers.nvim").command_history

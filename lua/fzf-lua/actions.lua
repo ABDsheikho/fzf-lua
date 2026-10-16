@@ -1237,6 +1237,43 @@ M.tmux_buf_set_reg = function(selected, opts)
   end
 end
 
+M.clipboard_copy = function(selected, opts)
+  local entry = selected and selected[1]
+  if not entry then return end
+  opts = opts or {}
+  local provider = opts.provider
+  local data
+  if type(opts.parse) == "function" then
+    local ok, res = pcall(opts.parse, provider, entry)
+    if not ok then
+      utils.error("clipboard: parse() failed: %s", res)
+      return
+    end
+    data = res
+  elseif provider and type(provider.decode) == "function" then
+    local ok, res = pcall(provider.decode, entry)
+    if not ok then
+      utils.error("clipboard: provider.decode() failed: %s", res)
+      return
+    end
+    data = res
+  end
+  if type(data) ~= "string" or #data == 0 then return end
+  local reg = opts.register
+  if not reg then
+    local cb = vim.o.clipboard
+    if cb:match("unnamedplus") then reg = "+"
+    elseif cb:match("unnamed") then reg = "*"
+    else reg = [["]] end
+  end
+  local ok, err = pcall(vim.fn.setreg, reg, data)
+  if ok then
+    utils.info("%d characters copied into register %s", #data, reg)
+  else
+    utils.error("setreg(%s) failed: %s", reg, err)
+  end
+end
+
 M.paste_register = function(selected)
   if not selected[1] then return end
   local reg = selected[1]:match("%[(.-)%]")

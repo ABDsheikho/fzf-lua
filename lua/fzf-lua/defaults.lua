@@ -1996,6 +1996,38 @@ M.defaults.registers = {
   fzf_opts     = { ["--no-multi"] = true },
 }
 
+---Clipboard history.
+---@class fzf-lua.config.Clipboard: fzf-lua.config.Base
+---Clipboard provider: how to list entries, decode them to text, and
+---optionally materialize binary entries to a file for image preview.
+---@field provider? fzf-lua.clipboard.Provider
+---Optional override for the text copied on `<enter>`.
+---
+---Receives the resolved `provider` (including the auto-detected default) so the
+---payload can be derived from, or composed on top of, `provider.decode` /
+---`provider.file` without the caller having to close over their provider table.
+---
+---Argument order is context-first: `parse(provider, entry)`, mirroring how a
+---handler receives the surrounding context before the item.
+---
+---Should richer context ever be needed (e.g. `opts.register`), it would be added
+---as a trailing argument -- `parse(provider, entry, opts)` -- but most
+---implementations won't need it, so it's intentionally omitted to keep the
+---signature small.
+---@field parse? fun(provider: fzf-lua.clipboard.Provider, entry: string): string
+---Register to copy the selected entry into, defaults to `+`/`*`/`"` per 'clipboard'.
+---@field register? string
+M.defaults.clipboard = {
+  previewer   = { _ctor = previewers.builtin.clipboard },
+  fzf_opts    = {
+    ["--delimiter"] = "\t",
+    ["--with-nth"]  = "2..",
+    ["--tiebreak"]  = "index",
+    ["--no-multi"]  = true,
+  },
+  actions     = { ["enter"] = actions.clipboard_copy },
+}
+
 ---Neovim keymaps.
 ---@class fzf-lua.config.Keymaps: fzf-lua.config.Base
 ---Lua patterns to filter keymaps.

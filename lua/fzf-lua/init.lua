@@ -337,6 +337,7 @@ local lazyloaded_modules = {
   register_ui_select = { "fzf-lua.providers.ui_select", "register" },
   deregister_ui_select = { "fzf-lua.providers.ui_select", "deregister" },
   tmux_buffers = { "fzf-lua.providers.tmux", "buffers" },
+  clipboard = { "fzf-lua.providers.clipboard", "clipboard" },
   profiles = { "fzf-lua.providers.meta", "profiles" },
   combine = { "fzf-lua.providers.meta", "combine" },
   global = { "fzf-lua.providers.meta", "global" },

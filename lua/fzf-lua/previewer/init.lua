@@ -23,6 +23,7 @@ Previewer.builtin.marks = function() return require "fzf-lua.previewer.builtin".
 Previewer.builtin.jumps = function() return require "fzf-lua.previewer.builtin".jumps end
 Previewer.builtin.tags = function() return require "fzf-lua.previewer.builtin".tags end
 Previewer.builtin.quickfix = function() return require "fzf-lua.previewer.builtin".quickfix end
+Previewer.builtin.clipboard = function() return require "fzf-lua.previewer.builtin".clipboard end
 Previewer.builtin.highlights = function() return require "fzf-lua.previewer.builtin".highlights end
 Previewer.builtin.autocmds = function() return require "fzf-lua.previewer.builtin".autocmds end
 Previewer.builtin.keymaps = function() return require "fzf-lua.previewer.builtin".keymaps end
