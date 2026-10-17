@@ -83,6 +83,7 @@ Using [lazy.nvim](https://github.com/folke/lazy.nvim)
 - [delta](https://github.com/dandavison/delta) - syntax highlighted git pager
   for git status previews
 - [jj](https://github.com/jj-vcs/jj) - for Jujutsu commands (`jj_files`, `vcs_files`)
+- [cliphist](https://github.com/sentriz/cliphist) - for clipboard history (`clipboard`, Wayland)
 - [nvim-dap](https://github.com/mfussenegger/nvim-dap) - for Debug Adapter
   Protocol (DAP) support
 - [nvim-treesitter-context](https://github.com/nvim-treesitter/nvim-treesitter-context) - for
@@ -1215,6 +1216,50 @@ previewers = {
       ["ctrl-s"]      = actions.keymap_split,
       ["ctrl-v"]      = actions.keymap_vsplit,
       ["ctrl-t"]      = actions.keymap_tabedit,
+    },
+  },
+  clipboard = {
+    -- previewer      = "builtin",    -- uncomment to override previewer
+    --
+    -- the clipboard provider controls where entries come from (`list`),
+    -- how they decode to text (`decode`) and how binary entries
+    -- materialize to a file for image preview (`file`, optional)
+    -- defaults to `cliphist` when the executable is found, errors otherwise
+    -- provider = {
+    --   -- `list` is a shell command, or a feeder function: it receives
+    --   -- a callback which it calls once per entry, then once with nil
+    --   -- to signal the end of the list:
+    --   --   list = function(cb)
+    --   --     cb("12\tClipboard entry one")
+    --   --     cb("11\tClipboard entry two")
+    --   --     cb(nil)
+    --   --   end,
+    --   list   = "cliphist list",
+    --
+    --   -- `decode` turns a row back into its full content: it receives
+    --   -- the raw (example: `id<TAB>text`) entry and returns the entry's text,
+    --   -- used by the preview and as the default text copied on `<enter>`
+    --   -- (a row itself is only a single-line rendition):
+    --   decode = function(entry) return ... end,
+    --
+    --   -- `file` (optional) enables image preview: it receives the
+    --   -- entry and a temp base path, writes the entry's raw bytes
+    --   -- to `<base>.<ext>` and returns that path, or nil when the
+    --   -- entry isn't an image:
+    --   file   = function(entry, base) ... end,
+    -- },
+    -- optional override for the text copied on `<enter>`
+    -- parse    = function(provider, entry) return ... end,
+    -- register to copy into, defaults to `+`/`*`/`"` per 'clipboard'
+    -- register = "+",
+    fzf_opts          = {
+      ["--delimiter"] = "\t",
+      ["--with-nth"]  = "2..",      -- hide the id column
+      ["--tiebreak"]  = "index",
+      ["--no-multi"]  = true,
+    },
+    actions           = {
+      ["enter"]       = actions.clipboard_copy,
     },
   },
   nvim_options = {

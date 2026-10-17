@@ -8,10 +8,10 @@ local M = {}
 ---@class fzf-lua.clipboard.Provider
 ---Source of clipboard history entries, one per line.
 ---Either a shell command string or a function yielding entries.
----List rows use `id<TAB>text` with the entry's full content flattened to a
----single line, so fuzzy search covers the whole content while display stays
----on one row per entry. Rows may fall back to a short preview when the full
----content is unavailable.
+---List rows use a format (example: `id<TAB>text`) with the entry's full
+---content flattened to a single line, so fuzzy search covers the whole
+---content while display stays on one row per entry. Rows may fall back to
+---a short preview when the full content is unavailable.
 ---@field list string|fun(cb: fun(line: string?))
 ---Maps a raw entry to its text content, used for the text preview
 ---and as the default `<enter>` copy payload.
@@ -74,9 +74,9 @@ local function batch_decode(ids)
 end
 
 ---Default `cliphist` provider.
----`cliphist list` prints `id<TAB>preview` rows (newest first) and
----`cliphist decode <id>` returns the byte-exact entry content, with binary
----entries rendered as `[[ binary data <size> <format> <WxH> ]]`.
+---`cliphist list` prints rows (example: `id<TAB>preview`), newest first,
+---and `cliphist decode <id>` returns the byte-exact entry content, with
+---binary entries rendered as `[[ binary data <size> <format> <WxH> ]]`.
 ---Each row carries the decoded full text flattened to a single line, so
 ---fuzzy search matches words anywhere in the entry, not just the one-line
 ---`cliphist list` preview (which is itself just a truncated prefix of the
